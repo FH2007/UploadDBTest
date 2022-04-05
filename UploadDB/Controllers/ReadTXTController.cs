@@ -13,32 +13,35 @@ namespace UploadDB.Controllers
         public List<WordModel> Read()
         {
             List<WordModel> list = new List<WordModel>();
-            using (StreamReader reader = new StreamReader(path))
+            if(path != null)
             {
-                string? line;
-                while ((line = reader.ReadLine()) != null)
+                using (StreamReader reader = new StreamReader(path))
                 {
-                    string[] subs = line.Split(' ');
-                    foreach (string s in subs)
+                    string? line;
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        if ((s != null) && (s.Length >= 3) && (s.Length <= 20))
+                        string[] subs = line.Split(' ');
+                        foreach (string s in subs)
                         {
-                            if (list.Select(x => x.Word).Contains(s))
+                            if ((s != null) && (s.Length >= 3) && (s.Length <= 20))
                             {
-                                list.Single(x => x.Word == s).Count++;
-                                //WordModel word = list.Single(x => x.Word == s);
-                                //word.Count++;
-                                //list.Add(word);
+                                if (list.Select(x => x.Word).Contains(s))
+                                {
+                                    list.Single(x => x.Word == s).Count++;
+
+                                    //WordModel word = list.Single(x => x.Word == s);
+                                    //word.Count++;
+                                    //list.Add(word);
+                                }
+                                else
+                                    list.Add(new WordModel { Word = s, Count = 1 });
                             }
-                            else
-                                list.Add(new WordModel { Word = s, Count = 1 });
                         }
                     }
-
-                    Console.WriteLine(line);
                 }
+                return list.Where(x => x.Count >= 4).ToList();
             }
-            return list.Where(x => x.Count >= 4).ToList();
+            throw new Exception("Пустой путь файла");
         }
     }
 }

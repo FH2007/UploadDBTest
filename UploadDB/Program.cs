@@ -3,9 +3,6 @@ using UploadDB.Controllers;
 using UploadDB.Models;
 
 Console.WriteLine("Hello");
-
-
-
 UpdateDBDataController updateDB = new UpdateDBDataController();
 updateDB.UpdateData();
 
