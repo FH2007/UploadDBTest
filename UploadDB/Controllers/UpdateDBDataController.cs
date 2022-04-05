@@ -12,8 +12,8 @@ namespace UploadDB.Controllers
     {
         public void UpdateData()
         {
-            ReadTXTController read = new ReadTXTController { path ="" };
-            List<WordModel> txtData = read.Read();
+            ReadTXTController read = new ReadTXTController();
+            List<WordModel> txtData = read.Read("D:/Work/TestTasks/repos/UploadDBTest/UploadDB/txt/1.txt");
             SetNewData(txtData);
         }
         private void SetNewData(List<WordModel> txtData)
@@ -28,9 +28,14 @@ namespace UploadDB.Controllers
                         if (word != null)
                         {
                             word.Count = word.Count + item.Count;
-                            db.SaveChanges();
+                            db.Words.Update(word);                            
+                        }
+                        else
+                        {
+                            db.Words.Add(new WordModel { Word = item.Word, Count = item.Count });
                         }
                     }
+                    db.SaveChanges();
                 }
             }
             else

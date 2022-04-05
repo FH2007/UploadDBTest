@@ -9,11 +9,10 @@ namespace UploadDB.Controllers
 {
     internal class ReadTXTController
     {
-        public string path { get; set; }
-        public List<WordModel> Read()
+        public List<WordModel> Read(string path)
         {
             List<WordModel> list = new List<WordModel>();
-            if(path != null)
+            if (path != null)
             {
                 using (StreamReader reader = new StreamReader(path))
                 {
@@ -28,10 +27,6 @@ namespace UploadDB.Controllers
                                 if (list.Select(x => x.Word).Contains(s))
                                 {
                                     list.Single(x => x.Word == s).Count++;
-
-                                    //WordModel word = list.Single(x => x.Word == s);
-                                    //word.Count++;
-                                    //list.Add(word);
                                 }
                                 else
                                     list.Add(new WordModel { Word = s, Count = 1 });
@@ -41,7 +36,7 @@ namespace UploadDB.Controllers
                 }
                 return list.Where(x => x.Count >= 4).ToList();
             }
-            throw new Exception("Пустой путь файла");
+            throw new Exception("Некорректный путь файла");
         }
     }
 }
