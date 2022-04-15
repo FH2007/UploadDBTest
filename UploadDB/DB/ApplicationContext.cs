@@ -10,7 +10,7 @@ namespace UploadDB.DB
 {
     public class ApplicationContext : DbContext
     {
-        public DbSet<WordModel> Words { get; set; }
+        public DbSet<WordDB> Words { get; set; }
 
         public ApplicationContext()
         {
@@ -23,7 +23,8 @@ namespace UploadDB.DB
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<WordModel>().HasIndex(u => u.Word).IsUnique();
+            modelBuilder.Entity<WordDB>().HasKey(u=>u.Id);
+            modelBuilder.Entity<WordDB>().HasIndex(u => u.Word).IsUnique();
         }
     }
 }

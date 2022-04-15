@@ -9,9 +9,9 @@ namespace UploadDB.Controllers
 {
     internal class ReadTXTController
     {
-        public List<WordModel> Read(string path)
+        public List<Word> Read(string path)
         {
-            List<WordModel> list = new List<WordModel>();
+            List<Word> list = new List<Word>();
             if (path != null)
             {
                 using (StreamReader reader = new StreamReader(path))
@@ -22,15 +22,12 @@ namespace UploadDB.Controllers
                         string[] subs = line.Split(' ');
                         foreach (string s in subs)
                         {
-                            if ((s != null) && (s.Length >= 3) && (s.Length <= 20))
+                            if (list.Select(x => x._word).Contains(s))
                             {
-                                if (list.Select(x => x.Word).Contains(s))
-                                {
-                                    list.Single(x => x.Word == s).Count++;
-                                }
-                                else
-                                    list.Add(new WordModel { Word = s, Count = 1 });
+                                list.Single(x => x._word == s).AddCount();
                             }
+                            else
+                                list.Add(new Word(s));
                         }
                     }
                 }

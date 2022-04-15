@@ -14,34 +14,34 @@ namespace UploadDB.Controllers
         public void UpdateData(string path)
         {
             ReadTXTController read = new ReadTXTController();
-            List<WordModel> txtData = read.Read(path);
+            List<Word> txtData = read.Read(path);
             SetNewData(txtData);
-            Console.WriteLine("Закончено");            
+            Console.WriteLine("Закончено");
         }
-        private void SetNewData(List<WordModel> txtData)
+        private void SetNewData(List<Word> txtData)
         {
             if (txtData != null)
             {
                 using (ApplicationContext db = new ApplicationContext())
                 {
                     foreach (var item in txtData)
-                    {   
+                    {
                         try
                         {
                             string sql =
-                            $"IF EXISTS (SELECT Id FROM Words WHERE Word= N'{item.Word}') " +
+                            $"IF EXISTS (SELECT Id FROM Words WHERE Word= N'{item._word}') " +
                                 "BEGIN " +
-                                    $"UPDATE Words SET Count = Count + {item.Count} WHERE Word = N'{item.Word}' " +
+                                    $"UPDATE Words SET Count = Count + {item.Count} WHERE Word = N'{item._word}' " +
                                 $"END " +
                             $"ELSE " +
                                 $"BEGIN " +
-                                    $"INSERT INTO Words(Word, Count) VALUES( N'{item.Word}', {item.Count}) " +
+                                    $"INSERT INTO Words(Word, Count) VALUES( N'{item._word}', {item.Count}) " +
                                 $"END";
                             db.Database.ExecuteSqlRaw(sql);
                         }
                         catch
                         {
-                            string sql = $"UPDATE Words SET Count = Count + {item.Count} WHERE Word = N'{item.Word}'";
+                            string sql = $"UPDATE Words SET Count = Count + {item.Count} WHERE Word = N'{item._word}'";
                             db.Database.ExecuteSqlRaw(sql);
                         }
                     }
@@ -52,34 +52,5 @@ namespace UploadDB.Controllers
                 throw new Exception("Недостаточно данных для обновлений");
             }
         }
-
-
-            //if (txtData != null)
-            //{
-            //    foreach (var item in txtData)
-            //    {
-            //        using (ApplicationContext db = new ApplicationContext())
-            //        {
-            //            WordModel word = db.Words.FirstOrDefault(x => x.Word == item.Word);
-            //            if (word != null)
-            //            {
-            //                word.Count = word.Count + item.Count;
-            //                db.Words.Update(new WordModel { Word = word.Word, Count = db.Words.FirstOrDefault(x => x.Word == item.Word).Count + item.Count });
-            //                //db.Words.Update(word);
-            //            }
-            //            else
-            //            {
-            //                db.Words.Add(new WordModel { Word = item.Word, Count = item.Count });
-            //            }
-            //            db.SaveChanges();
-            //        }
-            //    }
-
-            //}
-            //else
-            //{
-            //    throw new Exception("Недостаточно данных для обновлений");
-            //}
-            //}
-        }
+    }
 }
