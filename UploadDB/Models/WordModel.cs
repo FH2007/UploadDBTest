@@ -9,42 +9,22 @@ using System.Threading.Tasks;
 
 namespace UploadDB.Models
 {
-    
-    public interface IWordModel
+    public class WordClass
     {
-        static int Count;
-        static string Word;
-    }
-    public class Word : IWordModel
-    {
+        public WordClass(string word, int count)
+        {
+            Word = word;
+            Count = count;
+        }
         public int Count { get; private set; }
-        public string _word { get; private set; }
-        public Word(string Word)
+        public string Word { get; private set; }
+        private bool IsRequiredLength
         {
-            if ((Word != null) && (Word.Length >= 3) && (Word.Length <= 20) && (Word != "") && (Word != " "))
+            get
             {
-                this._word = Word;
-                this.Count = 1;
+                return Word.Length >= 3 && Word.Length <= 20;
             }
         }
-        public Word(string Word, int Count)
-        {
-            if ((Word != null) && (Word.Length >= 3) && (Word.Length <= 20) && (Word != "") && (Word != " ") && (Count != 0))
-            {
-                this._word = Word;
-                this.Count = Count;
-            }
-        }
-        public void AddCount()
-        {
-            this.Count++;
-        }
-    }
-    
-    public class WordDB : IWordModel
-    {        
-        public int Id { get; set; }
-        public int Count { get; set; }
-        public string Word { get; set; }
+        public bool IsMatch => IsRequiredLength && Count >= 4;
     }
 }

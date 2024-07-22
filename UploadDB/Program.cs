@@ -1,20 +1,21 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using UploadDB.Controllers;
 using UploadDB.Models;
-using UploadDB.DB;
+using UploadDB.Helpers;
 
-Console.WriteLine("Hello");
-UpdateDBDataController updateDB = new UpdateDBDataController();
-updateDB.UpdateData("D:/Work/TestTasks/repos/UploadDBTest/UploadDB/txt/1.txt");
 
-using (ApplicationContext db = new ApplicationContext())
+var path = "D:/Work/TestTasks/repos/UploadDBTest/UploadDB/txt/1.txt";
+
+try
 {
-    List<Word> words = db.Words.Select(a=> new Word(a.Word,a.Count)).ToList();
-    foreach (Word word in words)
-    {
-        Console.WriteLine($"{word._word} - {word.Count}");
-    }
+    IEnumerable<WordClass> words = StringHelper.SplitWords(path).Where(x => x.IsMatch);
+    UpdateDB.AddWords(words);
 }
+catch(Exception e)
+{
+    Console.WriteLine(e.Message);
+}
+
+
 Console.ReadKey();
 
 
