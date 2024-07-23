@@ -1,21 +1,23 @@
-﻿// See https://aka.ms/new-console-template for more information
-using UploadDB.Models;
+﻿using UploadDB.Models;
 using UploadDB.Helpers;
+using UploadDB;
 
-
-var path = "D:/Work/TestTasks/repos/UploadDBTest/UploadDB/txt/1.txt";
+var path = "F:\\repos\\UploadDBTest\\UploadDB\\txt\\1.txt";
 
 try
 {
-    IEnumerable<WordClass> words = StringHelper.SplitWords(path).Where(x => x.IsMatch);
-    UpdateDB.AddWords(words);
+    Document document = new(path);
+    using ApplicationContext db = new();
+    foreach (var word in document.Words)
+    {
+        UpdateDB.AddWord(word, db);
+    }
+    Console.WriteLine("Готово");
 }
-catch(Exception e)
+catch (Exception e)
 {
     Console.WriteLine(e.Message);
 }
-
-
 Console.ReadKey();
 
 

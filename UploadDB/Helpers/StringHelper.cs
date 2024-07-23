@@ -1,29 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UploadDB.Models;
+﻿using UploadDB.Models;
 
 namespace UploadDB.Helpers
 {
     internal class StringHelper
     {
-        internal static IEnumerable<WordClass> SplitWords(string path)
+        internal static string[] GetLines(string path)
         {
             if (!File.Exists(path))
-                throw new Exception("Некорректный путь файла");
+                throw new FileNotFoundException("Некорректный путь файла");
+            return File.ReadAllLines(path);
+        }
+
+        internal static IEnumerable<WordClass> SplitWords(string[] lines)
+        {
+            if(lines is null)
+                throw new ArgumentNullException("Пустой массив строк");
 
             var words = new List<string>();
 
-            using (StreamReader reader = new(path))
+            foreach (var line in lines)
             {
-                string? line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    words.AddRange(line.Split(' '));
-                }
+                words.AddRange(line.Split(' '));
             }
+
             return words.GroupBy(word=>word).Select(x=> new WordClass(x.Key, x.Count()));
 
         }
